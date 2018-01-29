@@ -1,0 +1,7 @@
+#
+# This file is managed by salt. Do not edit by hand.
+#
+{%- from "rundeck/map.jinja" import rundeck_settings with context %}
+{%- for user, info in salt['pillar.get']('rundeck:users', {}).items() %}
+{{ user }}:{{ info['password'] }},{{ info['groups']|join(',') }}
+{%- endfor %}

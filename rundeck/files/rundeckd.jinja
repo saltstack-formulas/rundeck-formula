@@ -1,0 +1,8 @@
+#
+# This file is managed by salt. Do not edit by hand.
+#
+{% from "rundeck/map.jinja" import rundeck_settings with context %}
+
+{%- for opt,value in rundeck_settings.profile.items() %}
+{{ opt }}="{{ value }}"
+{%- endfor %}

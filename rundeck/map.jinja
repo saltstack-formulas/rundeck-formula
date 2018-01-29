@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% set os_family_map = salt['grains.filter_by']({
+    'Debian': {
+        'repo_url': 'deb https://dl.bintray.com/rundeck/rundeck-deb /',
+        'repo_key': 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray',
+        'pkg': 'rundeck',
+        'pkg_cli': 'rundeck-cli',
+        'service': 'rundeckd',
+        'rundeck_config_path': '/etc/rundeck/rundeck-config.properties',
+        'framework_path': '/etc/rundeck/framework.properties',
+        'realm_path': '/etc/rundeck/realm.properties',
+        'rundeckd_path': '/etc/default/rundeckd',
+        'pkg_java': salt['grains.filter_by']({
+            '14': 'openjdk-7-jdk',
+            '16': 'openjdk-8-jdk',
+        }, grain='osmajorrelease'),
+    },
+    'RedHat': {
+        'repo_url': 'http://repo.rundeck.org/latest.rpm',
+        'pkg': 'rundeck',
+        'pkg_cli': 'rundeck-cli',
+        'service': 'rundeckd',
+        'rundeck_config_path': '/etc/rundeck/rundeck-config.properties',
+        'framework_path': '/etc/rundeck/framework.properties',
+        'realm_path': '/etc/rundeck/realm.properties',
+        'rundeckd_path': '/etc/sysconfig/rundeckd',
+        'pkg_java': 'java-1.8.0-openjdk',
+    },
+}, merge=salt['pillar.get']('rundeck:lookup')) %}
+
+{% set rundeck_settings = salt['pillar.get'](
+        'rundeck',
+        default=os_family_map,
+        merge=True
+    )
+%}

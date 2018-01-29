@@ -1,0 +1,46 @@
+#
+# This file is managed by salt. Do not edit by hand.
+#
+{%- from "rundeck/map.jinja" import rundeck_settings with context %}
+
+# framework.properties -
+#
+
+# ----------------------------------------------------------------
+# Rundeck server connection information
+# ----------------------------------------------------------------
+
+framework.server.name = {{ rundeck_settings.framework.server_name|default('localhost') }}
+framework.server.hostname = {{ rundeck_settings.framework.server_hostname|default('localhost') }}
+framework.server.port = {{ rundeck_settings.framework.server_port|default('4440') }}
+framework.server.url = {{ rundeck_settings.framework.server_url|default('http://localhost:4440') }}
+
+# ----------------------------------------------------------------
+# Installation locations
+# ----------------------------------------------------------------
+
+rdeck.base={{ rundeck_settings.framework.rdeck_base|default('/var/lib/rundeck') }}
+
+framework.projects.dir={{ rundeck_settings.framework.projects_dir|default('/var/rundeck/projects') }}
+framework.etc.dir={{ rundeck_settings.framework.etc_dir|default('/etc/rundeck') }}
+framework.var.dir={{ rundeck_settings.framework.var_dir|default('/var/lib/rundeck/var') }}
+framework.tmp.dir={{ rundeck_settings.framework.tmp_dir|default('/var/lib/rundeck/var/tmp') }}
+framework.logs.dir={{ rundeck_settings.framework.logs_dir|default('/var/lib/rundeck/logs') }}
+framework.libext.dir={{ rundeck_settings.framework.libext_dir|default('/var/lib/rundeck/libext') }}
+
+# ----------------------------------------------------------------
+# SSH defaults for node executor and file copier
+# ----------------------------------------------------------------
+
+framework.ssh.keypath = {{ rundeck_settings.framework.ssh_keypath|default('/var/lib/rundeck/.ssh/id_rsa') }}
+framework.ssh.user = {{ rundeck_settings.framework.ssh_user|default('rundeck') }}
+
+# ssh connection timeout after a specified number of milliseconds.
+# "0" value means wait forever.
+framework.ssh.timeout = {{ rundeck_settings.framework.ssh_timeout|default('0') }}
+
+
+# ----------------------------------------------------------------
+# Auto generated server UUID: 9540837e-8ca1-47bb-b16a-15d292f529a2
+# ----------------------------------------------------------------
+rundeck.server.uuid = {{ rundeck_settings.framework.server_uuid|default('9540837e-8ca1-47bb-b16a-15d292f529a2') }}

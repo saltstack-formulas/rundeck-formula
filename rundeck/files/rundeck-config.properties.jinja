@@ -1,0 +1,27 @@
+#
+# This file is managed by salt. Do not edit by hand.
+#
+{%- from "rundeck/map.jinja" import rundeck_settings with context %}
+
+loglevel.default={{ rundeck_settings.config.loglevel|default('INFO') }}
+rdeck.base={{ rundeck_settings.config.rdeck_base|default('/var/lib/rundeck') }}
+rss.enabled={{ rundeck_settings.config.rss|default('false') }}
+grails.serverURL={{ rundeck_settings.config.server_url|default('http://localhost:4440') }}
+{%- if 'datasource' in rundeck_settings.config %}
+dataSource.dbCreate = {{ rundeck_settings.config.datasource.dbcreate|default('update') }}
+dataSource.url = {{ rundeck_settings.config.datasource.url|default('jdbc:h2:file:/var/lib/rundeck/data/rundeckdb;MVCC=true') }}
+{%- if rundeck_settings.config.datasource.username is defined %}
+dataSource.username={{ rundeck_settings.config.datasource.username }}
+{%- endif %}
+{%- if rundeck_settings.config.datasource.password is defined %}
+dataSource.password={{ rundeck_settings.config.datasource.password }}
+{%- endif %}
+{%- else %}
+dataSource.dbCreate = update
+dataSource.url = jdbc:h2:file:/var/lib/rundeck/data/rundeckdb;MVCC=true
+{%- endif %}
+{%- if 'extra_opts' in rundeck_settings.config %}
+{%- for opt,value in rundeck_settings.config.extra_opts.items() %}
+{{ opt }}={{ value }}
+{%- endfor %}
+{%- endif %}
