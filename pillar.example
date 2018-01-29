@@ -19,9 +19,9 @@ rundeck:
         server_url: http://localhost:4440
         datasource:
             dbcreate: 'update'
-            url: 'jdbc:mysql://1.1.1.1/rundeck?autoReconnect=true'
-            username: 'user1'
-            password: 'supersecret1'
+            url: 'jdbc:mysql://10.58.20.172/rundeck?autoReconnect=true'
+            username: 'rundeckuser'
+            password: 'cPjyvcuWbb83r3yS'
         # all other opts that aren't matched above can be inserted with the following option:
         # extra_opts:
         #   option1: 'value1'
@@ -30,6 +30,8 @@ rundeck:
             rundeck.projectsStorageType: 'filesystem'
 
     # OPTIONAL - framework.properties
+    #            if set up, you must provide a server uuid, if not it will fails to avoid
+    #            same uuid for different servers
     framework:
         # ftp-style
 #        source_path: salt://asdfasdfsdf
@@ -49,7 +51,7 @@ rundeck:
         ssh_keypath: '/var/lib/rundeck/.ssh/id_rsa'
         ssh_user: 'rundeck'
         ssh_timeout: '0'
-        server_uuid: 'k540837R-8CA1-47BB-B16A-15D2asdfasldfasd92'
+        server_uuid: 'a2b03d4e-72d9-4be8-b395-180768cb0dcf' # required
 
     # realm.properties
     users:
@@ -64,6 +66,3 @@ rundeck:
                 - user
         user1:
             password: MD5:123123j123k123j12k3
-            groups:
-                - user
-

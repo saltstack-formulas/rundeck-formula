@@ -41,6 +41,6 @@ framework.ssh.timeout = {{ rundeck_settings.framework.ssh_timeout|default('0') }
 
 
 # ----------------------------------------------------------------
-# Auto generated server UUID: 9540837e-8ca1-47bb-b16a-15d292f529a2
+# Auto generated server UUID: {{ {{ rundeck_settings.framework.server_uuid }}
 # ----------------------------------------------------------------
-rundeck.server.uuid = {{ rundeck_settings.framework.server_uuid|default('9540837e-8ca1-47bb-b16a-15d292f529a2') }}
+rundeck.server.uuid = {{ rundeck_settings.framework.server_uuid }}
