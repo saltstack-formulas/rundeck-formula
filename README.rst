@@ -34,3 +34,7 @@ Configure rundeck using either templating-style or ftp-style.
 ``service``
 -----------
 Configure the rundeck service to run.
+
+``plugins``
+-----------
+Configure rundeck plugins.
