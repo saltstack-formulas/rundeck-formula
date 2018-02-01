@@ -7,4 +7,5 @@ include:
     - rundeck.repo
     - rundeck.install
     - rundeck.config
+    - rundeck.plugins
     - rundeck.service

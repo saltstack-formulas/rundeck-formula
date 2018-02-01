@@ -19,7 +19,7 @@ rundeck:
         server_url: http://localhost:4440
         datasource:
             dbcreate: 'update'
-            url: 'jdbc:mysql://10.58.20.172/rundeck?autoReconnect=true'
+            url: 'jdbc:mysql://1.1.1.1/rundeck?autoReconnect=true'
             username: 'rundeckuser'
             password: 'cPjyvcuWbb83r3yS'
         # all other opts that aren't matched above can be inserted with the following option:
@@ -66,3 +66,8 @@ rundeck:
                 - user
         user1:
             password: MD5:123123j123k123j12k3
+    plugins:
+        slack:
+            source: https://github.com/rundeck-plugins/slack-incoming-webhook-plugin/releases/download/v1.1/slack-incoming-webhook-plugin-1.1.jar
+        salt:
+            source: https://github.com/rundeck-plugins/salt-step/releases/download/0.3/rundeck-salt-plugin-0.3.jar

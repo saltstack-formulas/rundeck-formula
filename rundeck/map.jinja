@@ -16,6 +16,9 @@
             '14': 'openjdk-7-jdk',
             '16': 'openjdk-8-jdk',
         }, grain='osmajorrelease'),
+        'user': 'rundeck',
+        'group': 'rundeck',
+        'plugins_path': '/var/lib/rundeck/libext/',
     },
     'RedHat': {
         'repo_url': 'http://repo.rundeck.org/latest.rpm',
@@ -27,6 +30,9 @@
         'realm_path': '/etc/rundeck/realm.properties',
         'rundeckd_path': '/etc/sysconfig/rundeckd',
         'pkg_java': 'java-1.8.0-openjdk',
+        'user': 'rundeck',
+        'group': 'rundeck',
+        'plugins_path': '/var/lib/rundeck/libext',
     },
 }, merge=salt['pillar.get']('rundeck:lookup')) %}
 
