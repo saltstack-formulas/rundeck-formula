@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
 
-# state:    rundeck/plugins.sls
-# author:   @dseira
-# date:     2018-01-30
-# version:  0.0.1
-# comment:  Install rundeck plugins
-
 {% from "rundeck/map.jinja" import rundeck_settings with context %}
 
 {% if rundeck_settings.plugins is defined %}

@@ -53,19 +53,90 @@ rundeck:
         ssh_timeout: '0'
         server_uuid: 'a2b03d4e-72d9-4be8-b395-180768cb0dcf' # required
 
+    # jaas-loginmodule.conf
+    login:
+        #
+        # ftp-style
+        #
+        source_path: salt://path-to-jass-loginmodule.conf
+
+        #
+        # template-style
+        #
+
+        # realm.properties
+        file:
+            flag: required # OPTIONAL: Default: required
+            debug: False
+            use_first_pass: True
+            try_first_pass: True
+            store_pass: True
+            clear_pass: True
+            case_insensitive: True
+            refresh_interval: 10
+            file: '/etc/rundeck/realm.properties'
+
+        # pam module
+        pam:
+            flag: requisite
+            debug: False
+            service: sshd
+            use_unix_groups: True
+            supplemental_roles: "readonly,testing"
+
+        # ldap module
+        ldap:
+            flag: sufficient
+            debug: True
+            context_factory: 'com.sun.jndi.ldap.LdapCtxFactory'
+            provider_url: 'ldap://server:389'
+            bind_dn: 'cn=Manager,dc=example,dc=com'
+            bind_password: 'secret'
+            authentication_method: 'simple'
+            force_binding_login: False
+            force_binding_login_use_root_context_for_roles: False
+            user_base_dn: 'ou=People,dc=test1,dc=example,dc=com'
+            user_rdn_attribute: 'uid'
+            user_id_attribute: 'uid'
+            user_password_attribute: 'userPassword'
+            user_object_class: 'account'
+            role_base_dn: 'ou=Groups,dc=test1,dc=example,dc=com'
+            role_name_attribute: 'cn'
+            role_username_member_attribute: 'memberUid'
+            role_member_attribute: 'memberUid'
+            role_object_class: 'posixGroup'
+            role_prefix: 'rundeck_'
+            cache_duration_millis: '300000'
+            supplemental_roles: 'user'
+            report_statistics: True
+            timeout_read: '10000'
+            timeout_connect: '20000'
+            nested_groups: False
+            ignore_roles: True
+            store_pass: True
+            clear_pass: True
+            use_first_pass: True
+            try_first_pass: True
+
     # realm.properties
-    users:
+    realm:
+        restart: True # restart rundeck if realm.properties file changes. Default False.
+                      # Is optional because if the jaas-loginmodule is configured with 
+                      # refreshInterval it is not needed to restart the service.
         # ftp-style
 #        source_path: salt://users_file
 
         # template-style
-        admin:
-            password: MD5:asdfasdflkajsdfñlaf
-            groups:
-                - admin
-                - user
-        user1:
-            password: MD5:123123j123k123j12k3
+        users:
+            admin:
+                password: MD5:asdfasdflkajsdfñlasjdf
+                groups:
+                    - admin
+                    - user
+            user1:
+               password: MD5:asdfasdfasdfasdfasdfasdf
+                groups:
+                    - user
     plugins:
         slack:
             source: https://github.com/rundeck-plugins/slack-incoming-webhook-plugin/releases/download/v1.1/slack-incoming-webhook-plugin-1.1.jar
