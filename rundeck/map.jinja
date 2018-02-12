@@ -12,6 +12,7 @@
         'framework_path': '/etc/rundeck/framework.properties',
         'realm_path': '/etc/rundeck/realm.properties',
         'rundeckd_path': '/etc/default/rundeckd',
+        'login_path': '/etc/rundeck/jaas-loginmodule.conf',
         'pkg_java': salt['grains.filter_by']({
             '14': 'openjdk-7-jdk',
             '16': 'openjdk-8-jdk',
@@ -29,6 +30,7 @@
         'framework_path': '/etc/rundeck/framework.properties',
         'realm_path': '/etc/rundeck/realm.properties',
         'rundeckd_path': '/etc/sysconfig/rundeckd',
+        'login_path': '/etc/rundeck/jaas-loginmodule.conf',
         'pkg_java': 'java-1.8.0-openjdk',
         'user': 'rundeck',
         'group': 'rundeck',

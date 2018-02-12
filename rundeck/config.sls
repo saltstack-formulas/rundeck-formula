@@ -13,13 +13,13 @@ rundeck.config:
     file.managed:
         - name: {{ rundeck_settings.rundeck_config_path }}
         - source: {{ rundeck_config }}
-        - user: rundeck
-        - group: rundeck
+        - user: {{ rundeck_settings.user }}
+        - group: {{ rundeck_settings.group }}
         - mode: '640'
         - template: jinja
 
-{% if rundeck_settings.users.source_path is defined %}
-{% set rundeck_realm = rundeck_settings.users.source_path %}
+{% if rundeck_settings.realm.source_path is defined %}
+{% set rundeck_realm = rundeck_settings.realm.source_path %}
 {% else %}
 {% set rundeck_realm = 'salt://rundeck/files/realm.properties.jinja' %}
 {% endif %}
@@ -28,8 +28,8 @@ rundeck.realm:
     file.managed:
         - name: {{ rundeck_settings.realm_path }}
         - source: {{ rundeck_realm }}
-        - user: rundeck
-        - group: rundeck
+        - user: {{ rundeck_settings.user }}
+        - group: {{ rundeck_settings.group }}
         - mode: '640'
         - template: jinja
 
@@ -44,8 +44,8 @@ rundeck.framework:
     file.managed:
         - name: {{ rundeck_settings.framework_path }}
         - source: {{ rundeck_framework }}
-        - user: rundeck
-        - group: rundeck
+        - user: {{ rundeck_settings.user }}
+        - group: {{ rundeck_settings.group }}
         - mode: '640'
         - template: jinja
 
@@ -62,8 +62,26 @@ rundeck.profile:
     file.managed:
         - name: {{ rundeck_settings.rundeckd_path }}
         - source: {{ rundeck_profile }}
-        - user: rundeck
-        - group: rundeck
+        - user: {{ rundeck_settings.user }}
+        - group: {{ rundeck_settings.group }}
+        - mode: '640'
+        - template: jinja
+
+{% endif %}
+
+{% if 'login' in rundeck_settings %}
+{% if rundeck_settings.login.source_path is defined %}
+{% set rundeck_login = rundeck_settings.login.source_path %}
+{% else %}
+{% set rundeck_login = 'salt://rundeck/files/jaas-loginmodule.conf.jinja' %}
+{% endif %}
+
+rundeck.login:
+    file.managed:
+        - name: {{ rundeck_settings.login_path }}
+        - source: {{ rundeck_login }}
+        - user: {{ rundeck_settings.user }}
+        - group: {{ rundeck_settings.group }}
         - mode: '640'
         - template: jinja
 
