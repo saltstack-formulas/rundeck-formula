@@ -137,6 +137,16 @@ rundeck:
                password: MD5:asdfasdfasdfasdfasdfasdf
                 groups:
                     - user
+    # OPTIONAL, upload keys to rundeck-server
+    sshkey:
+        /var/lib/rundeck/.ssh:
+            # id_rsa
+            private: |
+                -----BEGIN RSA PRIVATE KEY-----
+                -----END RSA PRIVATE KEY-----
+            # id_rsa.pub
+            public:
+                - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     plugins:
         slack:
             source: https://github.com/rundeck-plugins/slack-incoming-webhook-plugin/releases/download/v1.1/slack-incoming-webhook-plugin-1.1.jar

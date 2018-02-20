@@ -86,3 +86,25 @@ rundeck.login:
         - template: jinja
 
 {% endif %}
+
+{% if 'sshkey' in rundeck_settings %}
+{% for dir,dir_options in rundeck_settings.sshkey.items() %}
+
+rundeck.sshkey.{{ dir }}.private_key:
+    file.managed:
+        - name: {{ dir }}/id_rsa
+        - user: {{ rundeck_settings.user }}
+        - group: {{ rundeck_settings.group }}
+        - mode: '600'
+        - contents_pillar: rundeck:sshkey:{{ dir }}:private
+
+rundeck.sshkey.{{ dir }}.public_key:
+    file.managed:
+        - name: {{ dir }}/id_rsa.pub
+        - user: {{ rundeck_settings.user }}
+        - group: {{ rundeck_settings.group }}
+        - mode: '644'
+        - contents_pillar: rundeck:sshkey:{{ dir }}:public
+
+{% endfor %}
+{% endif %}
