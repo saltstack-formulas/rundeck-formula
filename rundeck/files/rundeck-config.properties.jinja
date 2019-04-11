@@ -19,6 +19,7 @@ dataSource.password={{ rundeck_settings.config.datasource.password }}
 {%- else %}
 dataSource.dbCreate = update
 dataSource.url = jdbc:h2:file:/var/lib/rundeck/data/rundeckdb;MVCC=true
+rundeck.log4j.config.file = {{ rundeck_settings.log4j_path }}
 {%- endif %}
 {%- if 'extra_opts' in rundeck_settings.config %}
 {%- for opt,value in rundeck_settings.config.extra_opts.items() %}
