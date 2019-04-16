@@ -14,12 +14,22 @@
         'rundeckd_path': '/etc/default/rundeckd',
         'login_path': '/etc/rundeck/jaas-loginmodule.conf',
         'pkg_java': salt['grains.filter_by']({
-            '14': 'openjdk-7-jdk',
-            '16': 'openjdk-8-jdk',
-        }, grain='osmajorrelease'),
+            'Ubuntu': salt['grains.filter_by']({
+                '14': 'openjdk-7-jdk',
+                '16': 'openjdk-8-jdk',
+                '18': 'openjdk-8-jdk',
+                'default': 'openjdk-8-jdk',
+            }, grain='osmajorrelease'),
+            'Debian': salt['grains.filter_by']({
+                '9': 'openjdk-8-jdk',
+                'default': 'openjdk-8-jdk',
+            }, grain='osmajorrelease'),
+            'default': 'openjdk-8-jdk',
+        }, grain='os'),
         'user': 'rundeck',
         'group': 'rundeck',
         'plugins_path': '/var/lib/rundeck/libext/',
+        'log4j_path': '/etc/rundeck/log4j.properties',
     },
     'RedHat': {
         'repo_url': 'http://repo.rundeck.org/latest.rpm',
@@ -35,6 +45,7 @@
         'user': 'rundeck',
         'group': 'rundeck',
         'plugins_path': '/var/lib/rundeck/libext',
+        'log4j_path': '/etc/rundeck/log4j.properties',
     },
 }, merge=salt['pillar.get']('rundeck:lookup')) %}
 
