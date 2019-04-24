@@ -4,54 +4,6 @@
 {%- from "rundeck/map.jinja" import rundeck_settings with context %}
 RDpropertyfilelogin {
 
-{%- if rundeck_settings.login.file is defined %}
-
-    org.eclipse.jetty.jaas.spi.PropertyFileLoginModule {{ rundeck_settings.login.file.flag|default('required') }}
-    {%- if rundeck_settings.login.file.debug is defined %}
-        debug="{{ rundeck_settings.login.file.debug|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.file.use_first_pass is defined %}
-        useFirstPass="{{ rundeck_settings.login.file.use_first_pass|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.file.true_first_pass is defined %}
-        trueFirstPass="{{ rundeck_settings.login.file.true_first_pass|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.file.store_pass is defined %}
-        storePass="{{ rundeck_settings.login.file.store_pass|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.file.clear_pass is defined %}
-        clearPass="{{ rundeck_settings.login.file.clear_pass|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.file.refresh_interval is defined %}
-        refreshInterval="{{ rundeck_settings.login.file.refresh_interval }}"
-    {%- endif %}
-        file="{{ rundeck_settings.login.file.file|default(rundeck_settings.realm_path) }}";
-{%- endif %}
-
-{%- if rundeck_settings.login.pam is defined %}
-
-    org.rundeck.jaas.jetty.JettyPamLoginModule {{ rundeck_settings.login.pam.flag|default('required') }}
-    {%- if rundeck_settings.login.pam.debug is defined %}
-        debug="{{ rundeck_settings.login.pam.debug|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.pam.use_first_pass is defined %}
-        useFirstPass="{{ rundeck_settings.login.pam.use_first_pass|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.pam.true_first_pass is defined %}
-        trueFirstPass="{{ rundeck_settings.login.pam.true_first_pass|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.pam.store_pass is defined %}
-        storePass="{{ rundeck_settings.login.pam.store_pass|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.pam.clear_pass is defined %}
-        clearPass="{{ rundeck_settings.login.pam.clear_pass|lower }}"
-    {%- endif %}
-    {%- if rundeck_settings.login.pam.use_unix_groups is defined %}
-        useUnixGroups="{{ rundeck_settings.login.pam.use_unix_groups }}"
-    {%- endif %}
-        service="{{ rundeck_settings.login.pam.service|default('sshd') }}";
-{%- endif %}
-
 {%- if rundeck_settings.login.ldap is defined %}
 
     com.dtolabs.rundeck.jetty.jaas.JettyCachingLdapLoginModule {{ rundeck_settings.login.ldap.flag|default('required') }}
@@ -103,6 +55,15 @@ RDpropertyfilelogin {
     {%- if rundeck_settings.login.ldap.user_object_class is defined %}
         userObjectClass="{{ rundeck_settings.login.ldap.user_object_class }}"
     {%- endif %}
+    {%- if rundeck_settings.login.ldap.user_last_name_attribute is defined %}
+        userLastNameAttribute="{{ rundeck_settings.login.ldap.user_last_name_attribute }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.ldap.user_first_name_attribute is defined %}
+        userFirstNameAttribute="{{ rundeck_settings.login.ldap.user_first_name_attribute }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.ldap.user_email_attribute is defined %}
+        userEmailAttribute="{{ rundeck_settings.login.ldap.user_email_attribute }}"
+    {%- endif %}
     {%- if rundeck_settings.login.ldap.role_base_dn is defined %}
         roleBaseDn="{{ rundeck_settings.login.ldap.role_base_dn }}"
     {%- endif %}
@@ -143,6 +104,54 @@ RDpropertyfilelogin {
         ignoreRoles="{{ rundeck_settings.login.ldap.ignore_roles|lower }}"
     {%- endif %}
         providerUrl="{{ rundeck_settings.login.ldap.provider_url }}";
+{%- endif %}
+
+{%- if rundeck_settings.login.pam is defined %}
+
+    org.rundeck.jaas.jetty.JettyPamLoginModule {{ rundeck_settings.login.pam.flag|default('required') }}
+    {%- if rundeck_settings.login.pam.debug is defined %}
+        debug="{{ rundeck_settings.login.pam.debug|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.pam.use_first_pass is defined %}
+        useFirstPass="{{ rundeck_settings.login.pam.use_first_pass|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.pam.true_first_pass is defined %}
+        trueFirstPass="{{ rundeck_settings.login.pam.true_first_pass|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.pam.store_pass is defined %}
+        storePass="{{ rundeck_settings.login.pam.store_pass|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.pam.clear_pass is defined %}
+        clearPass="{{ rundeck_settings.login.pam.clear_pass|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.pam.use_unix_groups is defined %}
+        useUnixGroups="{{ rundeck_settings.login.pam.use_unix_groups }}"
+    {%- endif %}
+        service="{{ rundeck_settings.login.pam.service|default('sshd') }}";
+{%- endif %}
+
+{%- if rundeck_settings.login.file is defined %}
+
+    org.eclipse.jetty.jaas.spi.PropertyFileLoginModule {{ rundeck_settings.login.file.flag|default('required') }}
+    {%- if rundeck_settings.login.file.debug is defined %}
+        debug="{{ rundeck_settings.login.file.debug|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.file.use_first_pass is defined %}
+        useFirstPass="{{ rundeck_settings.login.file.use_first_pass|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.file.true_first_pass is defined %}
+        trueFirstPass="{{ rundeck_settings.login.file.true_first_pass|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.file.store_pass is defined %}
+        storePass="{{ rundeck_settings.login.file.store_pass|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.file.clear_pass is defined %}
+        clearPass="{{ rundeck_settings.login.file.clear_pass|lower }}"
+    {%- endif %}
+    {%- if rundeck_settings.login.file.refresh_interval is defined %}
+        refreshInterval="{{ rundeck_settings.login.file.refresh_interval }}"
+    {%- endif %}
+        file="{{ rundeck_settings.login.file.file|default(rundeck_settings.realm_path) }}";
 {%- endif %}
 
 };

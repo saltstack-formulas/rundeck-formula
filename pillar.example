@@ -22,6 +22,7 @@ rundeck:
             url: 'jdbc:mysql://1.1.1.1/rundeck?autoReconnect=true'
             username: 'rundeckuser'
             password: 'cPjyvcuWbb83r3yS'
+        sync_ldap_user: True
         # all other opts that aren't matched above can be inserted with the following option:
         # extra_opts:
         #   option1: 'value1'
@@ -100,6 +101,9 @@ rundeck:
             user_id_attribute: 'uid'
             user_password_attribute: 'userPassword'
             user_object_class: 'account'
+            user_last_name_attribute: 'sn'
+            user_first_name_attribute: 'givenName'
+            user_email_attribute: 'mail'
             role_base_dn: 'ou=Groups,dc=test1,dc=example,dc=com'
             role_name_attribute: 'cn'
             role_username_member_attribute: 'memberUid'
@@ -121,7 +125,7 @@ rundeck:
     # realm.properties
     realm:
         restart: True # restart rundeck if realm.properties file changes. Default False.
-                      # Is optional because if the jaas-loginmodule is configured with 
+                      # Is optional because if the jaas-loginmodule is configured with
                       # refreshInterval it is not needed to restart the service.
         # ftp-style
 #        source_path: salt://users_file
