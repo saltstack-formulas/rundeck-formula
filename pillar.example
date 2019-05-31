@@ -22,6 +22,7 @@ rundeck:
             url: 'jdbc:mysql://1.1.1.1/rundeck?autoReconnect=true'
             username: 'rundeckuser'
             password: 'cPjyvcuWbb83r3yS'
+            drivercn: 'com.mysql.jdbc.Driver'
         sync_ldap_user: True
         # all other opts that aren't matched above can be inserted with the following option:
         # extra_opts:

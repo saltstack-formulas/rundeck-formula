@@ -16,11 +16,14 @@ dataSource.username={{ rundeck_settings.config.datasource.username }}
   {%- if rundeck_settings.config.datasource.password is defined %}
 dataSource.password={{ rundeck_settings.config.datasource.password }}
   {%- endif %}
+  {%- if rundeck_settings.config.datasource.drivercn is defined %}
+dataSource.driverClassName = {{ rundeck_settings.config.datasource.drivercn }}
+  {%- endif %}
 {%- else %}
 dataSource.dbCreate = update
 dataSource.url = jdbc:h2:file:/var/lib/rundeck/data/rundeckdb;MVCC=true
-rundeck.log4j.config.file = {{ rundeck_settings.log4j_path }}
 {%- endif %}
+rundeck.log4j.config.file = {{ rundeck_settings.log4j_path }}
 {%- if 'sync_ldap_user' in rundeck_settings.config and rundeck_settings.config.sync_ldap_user == True %}
 rundeck.security.syncLdapUser=true
 {%- endif %}
