@@ -20,7 +20,7 @@ rundeck.plugin.{{ plugin }}.permissions:
         - name: {{ rundeck_settings.plugins_path }}/{{ plugin_name }}
         - user: {{ rundeck_settings.user }}
         - group: {{ rundeck_settings.group }}
-        - mode: '644'
+        - mode: '0644'
 
 {% endfor %}
 {% endif %}
