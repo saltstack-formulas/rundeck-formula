@@ -12,13 +12,9 @@ rundeck:
   # test the template formula itself. You should set these parameters to
   # examples that make sense in the contexto of the formula you're writing.
   pkg:
-    name: bash
-    use_upstream: package
-    version: 4.3.2
-    archive:
-      source_hash: b388f72c306507d4e59615b6c917a90e5486b0eea6511c5ea09d3ff2b3cfaf89
+    name: cronie
   service:
-    name: systemd-journald
+    name: crond
   config: /etc/rundeck-formula.conf
 
   tofs:
@@ -36,8 +32,6 @@ rundeck:
       - os_family
     # All aspects of path/file resolution are customisable using the options below.
     # This is unnecessary in most cases; there are sensible defaults.
-    # Default path: salt://< path_prefix >/< dirs.files >/< dirs.default >
-    #         I.e.: salt://rundeck/files/default
     # path_prefix: template_alt
     # dirs:
     #   files: files_alt

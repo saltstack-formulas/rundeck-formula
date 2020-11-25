@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
+rundeck:
+  pkg:
+    name: rundeck
+    deps: []
+    use_upstream: package
+    uri_a: https://github.com/saltstack-formulas/rundeck-formula/archive
+    version: 4.3.2
+    archive:
+      options: '--strip-components=1'
+      source_hash: b388f72c306507d4e59615b6c917a90e5486b0eea6511c5ea09d3ff2b3cfaf89
+    commands: []
+    suffix: tar.gz
+  rootuser: root
+  rootgroup: root
+  config: '/etc/rundeck'
+  service:
+    name: rundeck
+  subcomponent:
+    config: '/etc/rundeck-subcomponent-formula.conf'
+  # Just here for testing
+  added_in_defaults: defaults_value
+  winner: defaults
+  dir:
+    base: /opt
+    lib: /var/lib/rundeck
+    service: /lib/systemd/system
+  linux:
+    altpriority: 0   # zero disables alternatives
