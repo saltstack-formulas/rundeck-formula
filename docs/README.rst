@@ -18,8 +18,7 @@ rundeck-formula
    :scale: 100%
    :target: https://github.com/pre-commit/pre-commit
 
-A SaltStack formula that is empty. It has dummy content to help with a quick
-start on a new formula and it serves as a style guide.
+A SaltStack formula for rundeck.  Tested on CentOS, Ubuntu, Suse.
 
 .. contents:: **Table of Contents**
    :depth: 1
@@ -77,31 +76,31 @@ Available states
 
 *Meta-state (This is a state that includes other states)*.
 
-This installs the rundeck package,
-manages the rundeck configuration file and then
-starts the associated rundeck service.
+This installs the rundeck solution,
+manages the rundeck configuration file,
+and prepares rundeck for java exection.
 
 ``rundeck.package``
 ^^^^^^^^^^^^^^^^^^^^
 
-This state will install the rundeck package only.
-
-``rundeck.archive``
-^^^^^^^^^^^^^^^^^^^^
-
-This state will install the rundeck archive only.
+This state will install the rundeck package only (Ubuntu, CentOS, Windows) or war file.
 
 ``rundeck.config``
 ^^^^^^^^^^^^^^^^^^^
 
-This state will configure the rundeck service and has a dependency on ``rundeck.install``
+This state will configure rundeck files and has a dependency on ``rundeck.install``
 via include list.
 
 ``rundeck.service``
 ^^^^^^^^^^^^^^^^^^^^
 
-This state will start the rundeck service and has a dependency on ``rundeck.config``
+This state will configure the rundeck service and has a dependency on ``rundeck.config``
 via include list.
+
+``rundeck.plugins``
+^^^^^^^^^^^^^^^^^^^
+
+This state will configure rundeck plugins specified in pillar data.
 
 ``rundeck.clean``
 ^^^^^^^^^^^^^^^^^^
@@ -130,33 +129,11 @@ dependency on ``rundeck.service.clean`` via include list.
 This state will remove the rundeck package and has a depency on
 ``rundeck.config.clean`` via include list.
 
-``rundeck.archive.clean``
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+``rundeck.plugins``
+^^^^^^^^^^^^^^^^^^^
 
-This state will remove the rundeck archive and has a depency on
-``rundeck.config.clean`` via include list.
+This state will remove rundeck plugins specified in pillar data.
 
-``rundeck.subcomponent``
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-*Meta-state (This is a state that includes other states)*.
-
-This state installs a subcomponent configuration file before
-configuring and starting the rundeck service.
-
-``rundeck.subcomponent.config``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This state will configure the rundeck subcomponent and has a
-dependency on ``rundeck.config`` via include list.
-
-``rundeck.subcomponent.config.clean``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This state will remove the configuration of the rundeck subcomponent
-and reload the rundeck service by a dependency on
-``rundeck.service.running`` via include list and ``watch_in``
-requisite.
 
 Testing
 -------
