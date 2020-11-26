@@ -3,7 +3,6 @@
 
 include:
   - .package
-  - .archive
   - .config
+  - .plugins
   - .service
-  - .subcomponent

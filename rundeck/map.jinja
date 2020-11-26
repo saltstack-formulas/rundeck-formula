@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{#- Get the `tplroot` from `tpldir` #}
 {%- set tplroot = tpldir.split('/')[0] %}
-{#- Start imports as #}
 {%- import_yaml tplroot ~ "/defaults.yaml" as default_settings %}
-{%- import_yaml tplroot ~ "/osarchmap.yaml" as osarchmap %}
 {%- import_yaml tplroot ~ "/osfamilymap.yaml" as osfamilymap %}
-{%- import_yaml tplroot ~ "/osmap.yaml" as osmap %}
-{%- import_yaml tplroot ~ "/osfingermap.yaml" as osfingermap %}
 
 {#- Retrieve the config dict only once #}
 {%- set _config = salt['config.get'](tplroot, default={}) %}
@@ -17,23 +12,11 @@
       default_settings,
       default=tplroot,
       merge=salt['grains.filter_by'](
-        osarchmap,
-        grain='osarch',
-        merge=salt['grains.filter_by'](
-          osfamilymap,
-          grain='os_family',
+        osfamilymap,
+        grain='os_family',
           merge=salt['grains.filter_by'](
-            osmap,
-            grain='os',
-            merge=salt['grains.filter_by'](
-              osfingermap,
-              grain='osfinger',
-              merge=salt['grains.filter_by'](
-                _config,
-                default='lookup'
-              )
-            )
-          )
+          _config,
+          default='lookup'
         )
       )
     )
@@ -46,30 +29,19 @@
     )
 %}
 
-{# archive handling #}
-{%- if config.pkg.use_upstream|lower == 'archive' and 'archive' in config.pkg %}
-
-    {# path is C:\rundeck\bin or /opt/rundeck-n.n.n/bin #}
+{%- if config.pkg.use_upstream|lower == 'war' and 'war' in config.pkg %}
     {%- if grains.os == 'Windows' %}
-        {%- do config.pkg.update({'path': config.dir.base ~ "\\bin\\"}) %}
+        {%- do config.pkg.update({'path': config.dir.base ~ "\\webapps\\"}) %}
     {%- else %}
-        {%- do config.pkg.update({ 'path': '%s/rundeck-%s/bin/'|format(config.dir.base, config.pkg.version) }) %}
+        {%- do config.pkg.update({ 'path': '%s/rundeck-%s/webapps/'|format(config.dir.base, config.pkg.version) }) %}
     {%- endif %}
-
-    {# github releases url is uri/v1.0.0 or variants; source_hash is explict or online as xxx.sha256 #}
-    {%- set url = '%s/v%s.%s'|format(config.pkg.uri_a, config.pkg.version, config.pkg.suffix) %}
-    {%- if 'source_hash' in config.pkg.archive and config.pkg.archive.source_hash %}
-        {%- do config.pkg.archive.update({'name': config.pkg.path, 'source': url, 'source_hash': config.pkg.archive.source_hash}) %}
+    {%- set url = '%s/rundeck-%s.%s'|format(config.pkg.uri_w, config.pkg.version, 'war') %}
+    {%- if 'source_hash' in config.pkg.war and config.pkg.war.source_hash %}
+        {%- do config.pkg.war.update({ 'source_hash': config.pkg.war.source_hash}) %}
     {%- else %}
-        {%- do config.pkg.archive.update({'name': config.pkg.path, 'source': url, 'source_hash': url ~ '.sha256'}) %}
+        {%- do config.pkg.war.update({ 'source_hash': url ~ '.asc'}) %}
     {%- endif %}
+    {%- do config.pkg.war.update({ 'source': url}) %}
 {%- endif %}
-
 
 {%- set rundeck = config %}
-
-{#- Post-processing for specific non-YAML customisations #}
-{%- if grains.os == 'MacOS' %}
-{%-   set macos_group = salt['cmd.run']("stat -f '%Sg' /dev/console") %}
-{%-   do rundeck.update({'rootgroup': macos_group}) %}
-{%- endif %}

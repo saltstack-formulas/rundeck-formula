@@ -1,0 +1,6 @@
+#
+# This file is managed by salt. Do not edit by hand.
+#
+{%- for user, info in salt['pillar.get']('rundeck:realm:users', {}).items() %}
+{{ user }}:{{ info['password'] }},{{ info['groups']|join(',') }}
+{%- endfor %}

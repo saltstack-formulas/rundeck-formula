@@ -209,99 +209,34 @@ verifier:
 
 suites:
   - name: default
-    excludes:
-      - centos-6-2019-2-py2
-      - amazonlinux-1-2019-2-py2
-      - gentoo-stage3-latest-master-py3
-      - gentoo-stage3-systemd-master-py3
-      - gentoo-stage3-latest-3001-py3
-      - gentoo-stage3-systemd-3001-py3
-      - gentoo-stage3-latest-3000-3-py3
-      - gentoo-stage3-systemd-3000-3-py3
     provisioner:
       state_top:
         base:
           '*':
-            - rundeck._mapdata
             - rundeck
       pillars:
         top.sls:
           base:
             '*':
               - rundeck
-              - define_roles
       pillars_from_files:
         rundeck.sls: pillar.example
-        define_roles.sls: test/salt/pillar/define_roles.sls
     verifier:
       inspec_tests:
         - path: test/integration/default
-  - name: upstart
-    includes:
-      - centos-6-2019-2-py2
-      - amazonlinux-1-2019-2-py2
+  - name: clean
     provisioner:
       state_top:
         base:
           '*':
-            - rundeck._mapdata
-            - rundeck
+            - rundeck.clean
       pillars:
         top.sls:
           base:
             '*':
               - rundeck
-              - define_roles
-      pillars_from_files:
-        rundeck.sls: test/salt/pillar/upstart.sls
-        define_roles.sls: test/salt/pillar/define_roles.sls
-    verifier:
-      inspec_tests:
-        - path: test/integration/default
-  - name: gentoo
-    includes:
-      - gentoo-stage3-latest-master-py3
-      - gentoo-stage3-systemd-master-py3
-      - gentoo-stage3-latest-3001-py3
-      - gentoo-stage3-systemd-3001-py3
-      - gentoo-stage3-latest-3000-3-py3
-      - gentoo-stage3-systemd-3000-3-py3
-    provisioner:
-      state_top:
-        base:
-          '*':
-            - rundeck._mapdata
-            - rundeck
-      pillars:
-        top.sls:
-          base:
-            '*':
-              - rundeck
-              - gentoo
-              - define_roles
       pillars_from_files:
         rundeck.sls: pillar.example
-        gentoo.sls: test/salt/pillar/gentoo.sls
-        define_roles.sls: test/salt/pillar/define_roles.sls
     verifier:
       inspec_tests:
-        - path: test/integration/default
-  - name: archive
-    provisioner:
-      state_top:
-        base:
-          '*':
-            - rundeck._mapdata
-            - rundeck
-      pillars:
-        top.sls:
-          base:
-            '*':
-              - archive
-              - define_roles
-      pillars_from_files:
-        archive.sls: test/salt/pillar/archive.sls
-        define_roles.sls: test/salt/pillar/define_roles.sls
-    verifier:
-      inspec_tests:
-        - path: test/integration/archive
+        - path: test/integration/clean

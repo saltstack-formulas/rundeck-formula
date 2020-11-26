@@ -1,0 +1,44 @@
+#
+# This file is managed by salt. Do not edit by hand.
+#
+
+# framework.properties -
+#
+
+# ----------------------------------------------------------------
+# Rundeck server connection information
+# ----------------------------------------------------------------
+
+framework.server.name = {{ config.server_name|default('localhost') }}
+framework.server.hostname = {{ config.server_hostname|default('localhost') }}
+framework.server.port = {{ config.server_port|default('4440') }}
+framework.server.url = {{ config.server_url|default('http://localhost:4440') }}
+
+# ----------------------------------------------------------------
+# Installation locations
+# ----------------------------------------------------------------
+
+rdeck.base={{ config.rdeck_base|default('/var/lib/rundeck') }}
+
+framework.projects.dir={{ config.projects_dir|default('/var/rundeck/projects') }}
+framework.etc.dir={{ config.etc_dir|default('/etc/rundeck') }}
+framework.var.dir={{ config.var_dir|default('/var/lib/rundeck/var') }}
+framework.tmp.dir={{ config.tmp_dir|default('/var/lib/rundeck/var/tmp') }}
+framework.logs.dir={{ config.logs_dir|default('/var/lib/rundeck/logs') }}
+framework.libext.dir={{ config.libext_dir|default('/var/lib/rundeck/libext') }}
+
+# ----------------------------------------------------------------
+# SSH defaults for node executor and file copier
+# ----------------------------------------------------------------
+
+framework.ssh.keypath = {{ config.ssh_keypath|default('/var/lib/rundeck/.ssh/id_rsa') }}
+framework.ssh.user = {{ config.ssh_user|default('rundeck') }}
+
+# ssh connection timeout after a specified number of milliseconds.
+# "0" value means wait forever.
+framework.ssh.timeout = {{ config.ssh_timeout|default('0') }}
+
+# ----------------------------------------------------------------
+# Auto generated server UUID: {% raw %}{{{% endraw %} {{ config.server_uuid }} {% raw %}}}{% endraw %}
+# ----------------------------------------------------------------
+rundeck.server.uuid = {{ config.server_uuid }}

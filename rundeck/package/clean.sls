@@ -1,16 +1,29 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{#- Get the `tplroot` from `tpldir` #}
 {%- set tplroot = tpldir.split('/')[0] %}
-{%- set sls_config_clean = tplroot ~ '.config.clean' %}
 {%- from tplroot ~ "/map.jinja" import rundeck with context %}
 
+    {%- if grains.os_family in ('Debian',) %}
+        {%- set sls_repo_clean = tplroot ~ '.package.repo.clean' %}
 include:
-  - {{ sls_config_clean }}
+  - {{ sls_repo_clean }}
 
-rundeck-package-clean-pkg-removed:
-  pkg.removed:
+    {%- endif %}
+
+rundeck-package-clean-pkg:
+    {%- if rundeck.pkg.use_upstream|lower == 'war' %}
+  file.absent:
+    - name: {{ rundeck.pkg.path }}{{ rundeck.div }}{{ rundeck.pkg.name }}.war
+
+    {%- elif grains.kernel|lower in ('linux', 'darwin') %}
+
+  pkg.purged:
     - name: {{ rundeck.pkg.name }}
-    - require:
-      - sls: {{ sls_config_clean }}
+
+    {%- elif grains.kernel|lower in ('windows',) %}
+
+  chocolatey.uninstalled:
+    - name: {{ rundeck.pkg.name }}
+
+    {%- endif %}

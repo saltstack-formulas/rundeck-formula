@@ -2,60 +2,146 @@
 # vim: ft=yaml
 ---
 rundeck:
-  lookup:
-    master: rundeck-master
-    # Just for testing purposes
-    winner: lookup
-    added_in_lookup: lookup_value
+  # this file illustrates site-specific data
 
-  # Using bash package and udev service as an example. This allows us to
-  # test the template formula itself. You should set these parameters to
-  # examples that make sense in the contexto of the formula you're writing.
   pkg:
-    name: bash
-    use_upstream: package
-    version: 4.3.2
-    archive:
-      source_hash: b388f72c306507d4e59615b6c917a90e5486b0eea6511c5ea09d3ff2b3cfaf89
-  service:
-    name: systemd-journald
-  config: /etc/rundeck-formula.conf
+    use_upstream: war
+    version: '3.3.6-20201111'
 
-  tofs:
-    # The files_switch key serves as a selector for alternative
-    # directories under the formula files directory. See TOFS pattern
-    # doc for more info.
-    # Note: Any value not evaluated by `config.get` will be used literally.
-    # This can be used to set custom paths, as many levels deep as required.
-    files_switch:
-      - any/path/can/be/used/here
-      - id
-      - roles
-      - osfinger
-      - os
-      - os_family
-    # All aspects of path/file resolution are customisable using the options below.
-    # This is unnecessary in most cases; there are sensible defaults.
-    # Default path: salt://< path_prefix >/< dirs.files >/< dirs.default >
-    #         I.e.: salt://rundeck/files/default
-    # path_prefix: template_alt
-    # dirs:
-    #   files: files_alt
-    #   default: default_alt
-    # The entries under `source_files` are prepended to the default source files
-    # given for the state
-    # source_files:
-    #   rundeck-config-file-file-managed:
-    #     - 'example_alt.tmpl'
-    #     - 'example_alt.tmpl.jinja'
+  profile:
+    # /etc/sysconfig/rundeckd (centos) or /etc/default/rundeckd (ubuntu); ftpstyle o
+    # ftp-style or template
+    # source_path: salt://rundeckd-profile-file
+    RDECK_JVM: '$RDECK_JVM -Drundeck.jetty.connector.forwarded=true'
+    RDECK_HTTPS_PORT: '443'
 
-    # For testing purposes
-    source_files:
-      rundeck-config-file-file-managed:
-        - 'example.tmpl.jinja'
-      rundeck-subcomponent-config-file-file-managed:
-        - 'subcomponent-example.tmpl.jinja'
+  config:
+    # rundeck-config.properties; ftp-style or template
+    # source_path: salt://rundeck-config-file
+    server_url: http://localhost:4440
+    datasource:
+      dbcreate: 'update'
+      url: 'jdbc:mysql://1.1.1.1/rundeck?autoReconnect=true'
+      username: 'rundeckuser'
+      password: 'cPjyvcuWbb83r3yS'
+      drivercn: 'com.mysql.jdbc.Driver'
+    sync_ldap_user: True
+    # all other opts that aren't matched above can be inserted with the following option:
+    # extra_opts:
+    #   option1: 'value1'
+    #   option2: 'value2'
+    extra_opts:
+      rundeck.projectsStorageType: 'filesystem'
 
-  # Just for testing purposes
-  winner: pillar
-  added_in_pillar: pillar_value
+  # OPTIONAL - framework.properties
+  #            if set up, you must provide a server uuid, if not it will fails to avoid
+  #            same uuid for different servers
+  framework:
+    # ftp-style or template
+    # source_path: salt://asdfasdfsdf
+    server_name: 'localhost'
+    server_hostname: 'localhost'
+    server_port: '4440'
+    server_url: 'http://localhost:4440'
+    rdeck_base: '/var/lib/rundeck'
+    projects_dir: '/var/rundeck/projects'
+    etc_dir: '/etc/rundeck '
+    var_dir: '/var/lib/rundeck/var'
+    tmp_dir: '/var/lib/rundeck/var/tmp'
+    logs_dir: '/var/lib/rundeck/logs'
+    libext_dir: '/var/lib/rundeck/libext'
+    ssh_keypath: '/var/lib/rundeck/.ssh/id_rsa'
+    ssh_user: 'rundeck'
+    ssh_timeout: '0'
+    server_uuid: 'a2b03d4e-72d9-4be8-b395-180768cb0dcf' # required
+
+  login:
+    # jaas-loginmodule.conf
+    # ftp-style or templated
+    # source_path: salt://path-to-jass-loginmodule.conf
+    file:
+      flag: required # OPTIONAL: Default: required
+      debug: False
+      use_first_pass: True
+      try_first_pass: True
+      store_pass: True
+      clear_pass: True
+      case_insensitive: True
+      refresh_interval: 10
+      file: '/etc/rundeck/realm.properties'
+
+    pam:
+      flag: requisite
+      debug: False
+      service: sshd
+      use_unix_groups: True
+      supplemental_roles: "readonly,testing"
+
+    ldap:
+      flag: sufficient
+      debug: True
+      context_factory: 'com.sun.jndi.ldap.LdapCtxFactory'
+      provider_url: 'ldap://server:389'
+      bind_dn: 'cn=Manager,dc=example,dc=com'
+      bind_password: 'secret'
+      authentication_method: 'simple'
+      force_binding_login: False
+      force_binding_login_use_root_context_for_roles: False
+      user_base_dn: 'ou=People,dc=test1,dc=example,dc=com'
+      user_rdn_attribute: 'uid'
+      user_id_attribute: 'uid'
+      user_password_attribute: 'userPassword'
+      user_object_class: 'account'
+      user_last_name_attribute: 'sn'
+      user_first_name_attribute: 'givenName'
+      user_email_attribute: 'mail'
+      role_base_dn: 'ou=Groups,dc=test1,dc=example,dc=com'
+      role_name_attribute: 'cn'
+      role_username_member_attribute: 'memberUid'
+      role_member_attribute: 'memberUid'
+      role_object_class: 'posixGroup'
+      role_prefix: 'rundeck_'
+      cache_duration_millis: '300000'
+      supplemental_roles: 'user'
+      report_statistics: True
+      timeout_read: '10000'
+      timeout_connect: '20000'
+      nested_groups: False
+      ignore_roles: True
+      store_pass: True
+      clear_pass: True
+      use_first_pass: True
+      try_first_pass: True
+
+  realm:
+    # realm.properties; ftp-style or templated
+    # Is optional because if the jaas-loginmodule is configured with
+    # refreshInterval it is not needed to restart the service.
+    # source_path: salt://users_file
+    users:
+      admin:
+        password: MD5:asdfasdflkajsdfñlasjdf
+        groups:
+          - admin
+          - user
+      user1:
+        password: MD5:asdfasdfasdfasdfasdfasdf
+        groups:
+          - user
+
+  sshkey:
+    # optional, upload keys to rundeck-server
+    /var/lib/rundeck/.ssh:
+      # id_rsa
+      private: |
+        -----BEGIN RSA PRIVATE KEY-----
+        -----END RSA PRIVATE KEY-----
+      # id_rsa.pub
+      public:
+        - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+  plugins:
+    slack:
+      source: https://github.com/rundeck-plugins/slack-incoming-webhook-plugin/releases/download/v1.1/slack-incoming-webhook-plugin-1.1.jar
+    salt:
+      source: https://github.com/rundeck-plugins/salt-step/releases/download/0.3/rundeck-salt-plugin-0.3.jar

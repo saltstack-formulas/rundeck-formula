@@ -10,31 +10,34 @@
 # you will need to provide at least an empty dict in this file, e.g.
 # osfamilymap: {}
 ---
+{%- if grains.os == 'MacOS' %}
+    {%- set rootuser = salt['cmd.run']("stat -f '%Su' /dev/console") %}
+    {%- set rootgroup = salt['cmd.run']("stat -f '%Sg' /dev/console") %}
+{%- elif grains.os == 'Windows' %}
+    {%- set rootuser = salt['cmd.run']("id -un") %}
+{%- endif %}
+
 Debian:
   pkg:
-    name: rundeck-debian
-  config: /etc/rundeck.d/custom.conf
+    use_upstream: repo
+    deps:
+      - apt-transport-https
+    repo:
+      # https://docs.rundeck.com/docs/administration/install/linux-deb.html#open-source-rundeck
+      name: 'deb https://rundeck.bintray.com/rundeck-deb /'
+      file: '/etc/apt/sources.list.d/rundeck.list'
+      key_url: 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray'
+  dir:
+    tomcat: /usr/share/tomcat9
 
 RedHat:
   pkg:
-    name: rundeck-redhat
-  config: /etc/rundeck.conf
-
-Suse:
-  pkg:
-    name: rundeck-suse
-
-Gentoo:
-  pkg:
-    name: rundeck-gentoo
-
-Arch:
-  pkg:
-    name: rundeck-arch
-  service:
-    name: service-arch
-
-Alpine: {}
+    use_upstream: package
+    repo:
+      # https://docs.rundeck.com/docs/administration/install/linux-rpm.html#open-source-rundeck
+      source: http://repo.rundeck.org/latest.rpm
+  dir:
+    profile: /etc/sysconfig
 
 FreeBSD:
   rootgroup: wheel
@@ -42,8 +45,21 @@ FreeBSD:
 OpenBSD:
   rootgroup: wheel
 
-Solaris: {}
+Windows:
+  dir:
+    base: C:\\rundeck
+    source: C:\\rundeck\src\libs
+    operators: C:\\rundeck\src
+    tmp: C:\\temp\rundeck
+    logs: 'server\\logs'
+  identity:
+    rootuser: {{ rootuser | d('') }}
+  div: '\'
+  pkg:
+    use_upstream: package
 
-Windows: {}
-
-MacOS: {}
+MacOS:
+  identity:
+    rootuser: {{ rootuser | d('') }}
+  pkg:
+    use_upstream: package
