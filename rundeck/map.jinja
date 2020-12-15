@@ -1,57 +1,47 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{% set os_family_map = salt['grains.filter_by']({
-    'Debian': {
-        'repo_url': 'deb https://dl.bintray.com/rundeck/rundeck-deb /',
-        'repo_key': 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray',
-        'pkg': 'rundeck',
-        'pkg_cli': 'rundeck-cli',
-        'service': 'rundeckd',
-        'rundeck_config_path': '/etc/rundeck/rundeck-config.properties',
-        'framework_path': '/etc/rundeck/framework.properties',
-        'realm_path': '/etc/rundeck/realm.properties',
-        'rundeckd_path': '/etc/default/rundeckd',
-        'login_path': '/etc/rundeck/jaas-loginmodule.conf',
-        'pkg_java': salt['grains.filter_by']({
-            'Ubuntu': salt['grains.filter_by']({
-                '14': 'openjdk-7-jdk',
-                '16': 'openjdk-8-jdk',
-                '18': 'openjdk-8-jdk',
-                'default': 'openjdk-8-jdk',
-            }, grain='osmajorrelease'),
-            'Debian': salt['grains.filter_by']({
-                '9': 'openjdk-8-jdk',
-                'default': 'openjdk-8-jdk',
-            }, grain='osmajorrelease'),
-            'default': 'openjdk-8-jdk',
-        }, grain='os'),
-        'user': 'rundeck',
-        'group': 'rundeck',
-        'plugins_path': '/var/lib/rundeck/libext/',
-        'log4j_path': '/etc/rundeck/log4j.properties',
-    },
-    'RedHat': {
-        'repo_url': 'http://repo.rundeck.org/latest.rpm',
-        'pkg': 'rundeck',
-        'pkg_cli': 'rundeck-cli',
-        'service': 'rundeckd',
-        'rundeck_config_path': '/etc/rundeck/rundeck-config.properties',
-        'framework_path': '/etc/rundeck/framework.properties',
-        'realm_path': '/etc/rundeck/realm.properties',
-        'rundeckd_path': '/etc/sysconfig/rundeckd',
-        'login_path': '/etc/rundeck/jaas-loginmodule.conf',
-        'pkg_java': 'java-1.8.0-openjdk',
-        'user': 'rundeck',
-        'group': 'rundeck',
-        'plugins_path': '/var/lib/rundeck/libext',
-        'log4j_path': '/etc/rundeck/log4j.properties',
-    },
-}, merge=salt['pillar.get']('rundeck:lookup')) %}
+{%- set tplroot = tpldir.split('/')[0] %}
+{%- import_yaml tplroot ~ "/defaults.yaml" as default_settings %}
+{%- import_yaml tplroot ~ "/osfamilymap.yaml" as osfamilymap %}
 
-{% set rundeck_settings = salt['pillar.get'](
-        'rundeck',
-        default=os_family_map,
-        merge=True
+{#- Retrieve the config dict only once #}
+{%- set _config = salt['config.get'](tplroot, default={}) %}
+
+{%- set defaults = salt['grains.filter_by'](
+      default_settings,
+      default=tplroot,
+      merge=salt['grains.filter_by'](
+        osfamilymap,
+        grain='os_family',
+          merge=salt['grains.filter_by'](
+          _config,
+          default='lookup'
+        )
+      )
     )
 %}
+
+{%- set config = salt['grains.filter_by'](
+      {'defaults': defaults},
+      default='defaults',
+      merge=_config
+    )
+%}
+
+{%- if config.pkg.use_upstream|lower == 'war' and 'war' in config.pkg %}
+    {%- if grains.os == 'Windows' %}
+        {%- do config.pkg.update({'path': config.dir.base ~ "\\webapps\\"}) %}
+    {%- else %}
+        {%- do config.pkg.update({ 'path': '%s/rundeck-%s/webapps/'|format(config.dir.base, config.pkg.version) }) %}
+    {%- endif %}
+    {%- set url = '%s/rundeck-%s.%s'|format(config.pkg.uri_w, config.pkg.version, 'war') %}
+    {%- if 'source_hash' in config.pkg.war and config.pkg.war.source_hash %}
+        {%- do config.pkg.war.update({ 'source_hash': config.pkg.war.source_hash}) %}
+    {%- else %}
+        {%- do config.pkg.war.update({ 'source_hash': url ~ '.asc'}) %}
+    {%- endif %}
+    {%- do config.pkg.war.update({ 'source': url}) %}
+{%- endif %}
+
+{%- set rundeck = config %}

@@ -1,0 +1,156 @@
+/*
+ * This file is managed by salt. Do not edit by hand.
+ */
+RDpropertyfilelogin {
+
+{%- if config.ldap is defined %}
+
+    com.dtolabs.rundeck.jetty.jaas.JettyCachingLdapLoginModule {{ config.ldap.flag|default('required') }}
+    {%- if config.ldap.debug is defined %}
+        debug="{{ config.ldap.debug|lower }}"
+    {%- endif %}
+    {%- if config.ldap.use_first_pass is defined %}
+        useFirstPass="{{ config.ldap.use_first_pass|lower }}"
+    {%- endif %}
+    {%- if config.ldap.true_first_pass is defined %}
+        trueFirstPass="{{ config.ldap.true_first_pass|lower }}"
+    {%- endif %}
+    {%- if config.ldap.store_pass is defined %}
+        storePass="{{ config.ldap.store_pass|lower }}"
+    {%- endif %}
+    {%- if config.ldap.clear_pass is defined %}
+        clearPass="{{ config.ldap.clear_pass|lower }}"
+    {%- endif %}
+    {%- if config.ldap.context_factory is defined %}
+        contextFactory="{{ config.ldap.context_factory }}"
+    {%- endif %}
+    {%- if config.ldap.bind_dn is defined %}
+        bindDn="{{ config.ldap.bind_dn }}"
+    {%- endif %}
+    {%- if config.ldap.bind_password is defined %}
+        bindPassword="{{ config.ldap.bind_password }}"
+    {%- endif %}
+    {%- if config.ldap.authentication_method is defined %}
+        authenticationMethod="{{ config.ldap.authentication_method }}"
+    {%- endif %}
+    {%- if config.ldap.force_binding_login is defined %}
+        forceBindingLogin="{{ config.ldap.force_binding_login|lower }}"
+    {%- endif %}
+    {%- if config.ldap.force_binding_login_use_root_context_for_roles is defined %}
+        forceBindingLoginUseRootContextForRoles="{{ config.ldap.force_binding_login_use_root_context_for_roles|lower }}"
+    {%- endif %}
+    {%- if config.ldap.user_base_dn is defined %}
+        userBaseDn="{{ config.ldap.user_base_dn }}"
+    {%- endif %}
+    {%- if config.ldap.user_rdn_attribute is defined %}
+        userRdnAttribute="{{ config.ldap.user_rdn_attribute }}"
+    {%- endif %}
+    {%- if config.ldap.user_id_attribute is defined %}
+        userIdAttribute="{{ config.ldap.user_id_attribute }}"
+    {%- endif %}
+    {%- if config.ldap.user_password_attribute is defined %}
+        userPasswordAttribute="{{ config.ldap.user_password_attribute }}"
+    {%- endif %}
+    {%- if config.ldap.user_object_class is defined %}
+        userObjectClass="{{ config.ldap.user_object_class }}"
+    {%- endif %}
+    {%- if config.ldap.user_last_name_attribute is defined %}
+        userLastNameAttribute="{{ config.ldap.user_last_name_attribute }}"
+    {%- endif %}
+    {%- if config.ldap.user_first_name_attribute is defined %}
+        userFirstNameAttribute="{{ config.ldap.user_first_name_attribute }}"
+    {%- endif %}
+    {%- if config.ldap.user_email_attribute is defined %}
+        userEmailAttribute="{{ config.ldap.user_email_attribute }}"
+    {%- endif %}
+    {%- if config.ldap.role_base_dn is defined %}
+        roleBaseDn="{{ config.ldap.role_base_dn }}"
+    {%- endif %}
+    {%- if config.ldap.role_name_attribute is defined %}
+        roleNameAttribute="{{ config.ldap.role_name_attribute }}"
+    {%- endif %}
+    {%- if config.ldap.role_username_member_attribute is defined %}
+        roleUsernameMemberAttribute="{{ config.ldap.role_username_member_attribute }}"
+    {%- endif %}
+    {%- if config.ldap.role_member_attribute is defined %}
+        roleMemberAttribute="{{ config.ldap.role_member_attribute }}"
+    {%- endif %}
+    {%- if config.ldap.role_object_class is defined %}
+        roleObjectClass="{{ config.ldap.role_object_class }}"
+    {%- endif %}
+    {%- if config.ldap.role_prefix is defined %}
+        rolePrefix="{{ config.ldap.role_prefix }}"
+    {%- endif %}
+    {%- if config.ldap.cache_duration_millis is defined %}
+        cacheDurationMillis="{{ config.ldap.cache_duration_millis }}"
+    {%- endif %}
+    {%- if config.ldap.supplemental_roles is defined %}
+        supplementalRoles="{{ config.ldap.supplemental_roles }}"
+    {%- endif %}
+    {%- if config.ldap.report_statistics is defined %}
+        reportStatistics="{{ config.ldap.report_statistics }}"
+    {%- endif %}
+    {%- if config.ldap.timeout_read is defined %}
+        timeoutRead="{{ config.ldap.timeout_read }}"
+    {%- endif %}
+    {%- if config.ldap.timeout_connect is defined %}
+        timeoutConnect="{{ config.ldap.timeout_connect }}"
+    {%- endif %}
+    {%- if config.ldap.nested_groups is defined %}
+        nestedGroups="{{ config.ldap.nested_groups|lower }}"
+    {%- endif %}
+    {%- if config.ldap.ignore_roles is defined %}
+        ignoreRoles="{{ config.ldap.ignore_roles|lower }}"
+    {%- endif %}
+        providerUrl="{{ config.ldap.provider_url }}";
+{%- endif %}
+
+{%- if config.pam is defined %}
+
+    org.rundeck.jaas.jetty.JettyPamLoginModule {{ config.pam.flag|default('required') }}
+    {%- if config.pam.debug is defined %}
+        debug="{{ config.pam.debug|lower }}"
+    {%- endif %}
+    {%- if config.pam.use_first_pass is defined %}
+        useFirstPass="{{ config.pam.use_first_pass|lower }}"
+    {%- endif %}
+    {%- if config.pam.true_first_pass is defined %}
+        trueFirstPass="{{ config.pam.true_first_pass|lower }}"
+    {%- endif %}
+    {%- if config.pam.store_pass is defined %}
+        storePass="{{ config.pam.store_pass|lower }}"
+    {%- endif %}
+    {%- if config.pam.clear_pass is defined %}
+        clearPass="{{ config.pam.clear_pass|lower }}"
+    {%- endif %}
+    {%- if config.pam.use_unix_groups is defined %}
+        useUnixGroups="{{ config.pam.use_unix_groups }}"
+    {%- endif %}
+        service="{{ config.pam.service|default('sshd') }}";
+{%- endif %}
+
+{%- if config.file is defined %}
+
+    org.eclipse.jetty.jaas.spi.PropertyFileLoginModule {{ config.file.flag|default('required') }}
+    {%- if config.file.debug is defined %}
+        debug="{{ config.file.debug|lower }}"
+    {%- endif %}
+    {%- if config.file.use_first_pass is defined %}
+        useFirstPass="{{ config.file.use_first_pass|lower }}"
+    {%- endif %}
+    {%- if config.file.true_first_pass is defined %}
+        trueFirstPass="{{ config.file.true_first_pass|lower }}"
+    {%- endif %}
+    {%- if config.file.store_pass is defined %}
+        storePass="{{ config.file.store_pass|lower }}"
+    {%- endif %}
+    {%- if config.file.clear_pass is defined %}
+        clearPass="{{ config.file.clear_pass|lower }}"
+    {%- endif %}
+    {%- if config.file.refresh_interval is defined %}
+        refreshInterval="{{ config.file.refresh_interval }}"
+    {%- endif %}
+        file="{{ config.file.file|default(config.realm_path) }}";
+{%- endif %}
+
+};

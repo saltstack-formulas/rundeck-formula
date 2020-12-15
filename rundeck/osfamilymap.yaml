@@ -1,0 +1,65 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+#
+# Setup variables using grains['os_family'] based logic.
+# You just need to add the key:values for an `os_family` that differ
+# from `defaults.yaml` + `osarch.yaml`.
+# Only add an `os_family` which is/will be supported by the formula.
+#
+# If you do not need to provide defaults via the `os_family` grain,
+# you will need to provide at least an empty dict in this file, e.g.
+# osfamilymap: {}
+---
+{%- if grains.os == 'MacOS' %}
+    {%- set rootuser = salt['cmd.run']("stat -f '%Su' /dev/console") %}
+    {%- set rootgroup = salt['cmd.run']("stat -f '%Sg' /dev/console") %}
+{%- elif grains.os == 'Windows' %}
+    {%- set rootuser = salt['cmd.run']("id -un") %}
+{%- endif %}
+
+Debian:
+  pkg:
+    use_upstream: repo
+    deps:
+      - apt-transport-https
+    repo:
+      # https://docs.rundeck.com/docs/administration/install/linux-deb.html#open-source-rundeck
+      name: 'deb https://rundeck.bintray.com/rundeck-deb /'
+      file: '/etc/apt/sources.list.d/rundeck.list'
+      key_url: 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray'
+  dir:
+    tomcat: /usr/share/tomcat9
+
+RedHat:
+  pkg:
+    use_upstream: package
+    repo:
+      # https://docs.rundeck.com/docs/administration/install/linux-rpm.html#open-source-rundeck
+      source: http://repo.rundeck.org/latest.rpm
+  dir:
+    profile: /etc/sysconfig
+
+FreeBSD:
+  rootgroup: wheel
+
+OpenBSD:
+  rootgroup: wheel
+
+Windows:
+  dir:
+    base: C:\\rundeck
+    source: C:\\rundeck\src\libs
+    operators: C:\\rundeck\src
+    tmp: C:\\temp\rundeck
+    logs: 'server\\logs'
+  identity:
+    rootuser: {{ rootuser | d('') }}
+  div: '\'
+  pkg:
+    use_upstream: package
+
+MacOS:
+  identity:
+    rootuser: {{ rootuser | d('') }}
+  pkg:
+    use_upstream: package

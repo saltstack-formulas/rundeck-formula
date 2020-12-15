@@ -1,0 +1,7 @@
+########################################################################
+# File managed by Salt at <{{ source }}>.
+# Your changes will be overwritten.
+########################################################################
+
+JAVA_OPTS="${JAVA_OPTS} {{ '' if not javaopts else javaopts }} -XX:MaxPermSize={{ mx_perm_sz }} -Xmx{{ mx }} -Xms{{ ms }} -server -Drdeck.base={{ basedir }} -Drundeck.config.location={{ config }} -Drundeck.server.logDir={{ logdir }}"
+

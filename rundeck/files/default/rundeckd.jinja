@@ -1,0 +1,7 @@
+#
+# This file is managed by salt. Do not edit by hand.
+#
+
+{%- for opt,value in config.items() %}
+{{ opt }}="{{ value }}"
+{%- endfor %}

@@ -1,0 +1,78 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
+rundeck:
+  pkg:
+    name: rundeck
+    deps: []
+    use_upstream: war
+    uri_w: 'https://download.rundeck.org/war'
+    version: 3.3.6-20201111
+    war:
+      source_hash: https://download.rundeck.org/war/rundeck-3.3.6-20201111.war.asc
+      # https://docs.rundeck.com/docs/administration/install/tomcat.html
+      javaopts: null
+      mx_perm_sz: 512m
+      mx: 2048m
+      ms: 512m
+
+    suffix: war
+    repo:
+      comments:
+        - installed by salt
+      enabled: 1
+      gpgcheck: 1
+    commands:
+      - rundeck-cli
+  dir:
+    base: /opt
+    config: /etc/rundeck
+    lib: /var/lib/rundeck
+    service: /lib/systemd/system
+    profile: /etc/default
+    log: server/logs
+    tomcat: /usr/share/tomcat9
+
+  config:
+    log4j_path: '/etc/rundeck/log4j.properties'
+  framework: {}
+  realm: {}
+  login: {}
+  sshkey: {}
+  service:
+    name: rundeckd
+    managed: false
+  configfile:
+    config: rundeck-config.properties
+    framework: framework.properies
+    realm: realm.properties
+    login: jaas-loginmodule.conf
+    profile: rundeckd
+    log4j: log4j.properties
+  linux:
+    altpriority: 0   # zero disables alternatives
+  supported:
+    - rundeck
+  wanted:
+    - rundeck
+  depends:
+    - java
+
+  identity:
+    rootuser: root
+    rootgroup: root
+    user: rundeck
+    group: rundeck
+
+  misc:
+    clean: false
+    reload: true
+    refresh: true
+    firewall: false
+    hold: false
+    selinux: false
+  div: '/'
+
+  # Just here for testing
+  added_in_defaults: defaults_value
+  winner: defaults
