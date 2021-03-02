@@ -49,7 +49,7 @@ rundeck-package-install-pkg:
       - rundeck-repo: {{ rundeck.pkg.repo.source }}
         {%- else %}
     - name: {{ rundeck.pkg.name }}
-    - version: {{ rundeck_pkg_version or rundeck.pkg.version or 'latest' }}
+    - version: {{ rundeck.pkg.version or 'latest' }}
     - runas: {{ rundeck.identity.rootuser }}
     - reload_modules: {{ rundeck.misc.reload|default(true, true) }}
     - refresh: {{ rundeck.misc.refresh|default(true, true) }}
