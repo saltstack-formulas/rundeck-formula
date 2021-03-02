@@ -177,7 +177,7 @@ rundeck-config-files-sshkey-{{ dir }}-dir:
         {%- if grains.os != 'Windows' %}
     - user: {{ rundeck.identity.user }}
     - group: {{ rundeck.identity.group }}
-    - mode: '0640'
+    - mode: '0750'
         {%- endif %}
     - makedirs: True
     - require:
