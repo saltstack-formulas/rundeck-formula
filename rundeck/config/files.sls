@@ -189,7 +189,7 @@ rundeck-config-files-sshkey-{{dir }}.private_key:
         {%- if grains.os != 'Windows' %}
     - user: {{ rundeck.identity.user }}
     - group: {{ rundeck.identity.group }}
-    - mode: '0640'
+    - mode: '0600'
         {%- endif %}
     - makedirs: True
     - contents_pillar: rundeck:sshkey:{{ dir }}:private
