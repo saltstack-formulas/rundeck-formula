@@ -24,9 +24,9 @@ Debian:
       - apt-transport-https
     repo:
       # https://docs.rundeck.com/docs/administration/install/linux-deb.html#open-source-rundeck
-      name: 'deb https://rundeck.bintray.com/rundeck-deb /'
+      name: 'deb https://packages.rundeck.com/pagerduty/rundeck/any/ any main'
       file: '/etc/apt/sources.list.d/rundeck.list'
-      key_url: 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray'
+      key_url: 'https://packages.rundeck.com/pagerduty/rundeck/gpgkey'
   dir:
     tomcat: /usr/share/tomcat9
 
