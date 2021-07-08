@@ -11,6 +11,7 @@ rundeck-package-repo-managed:
   pkgrepo.managed:
     {{- format_kwargs(rundeck.pkg.repo) }}
     - humanname: {{ grains["os"] }} {{ grains["oscodename"]|capitalize }} rundeck Package Repository
+    - clean_file: True
     - refesh: {{ rundeck.misc.refresh }}
 
     {%- endif %}
